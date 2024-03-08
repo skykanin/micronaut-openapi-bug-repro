@@ -6,8 +6,8 @@ default: | help
 build-mvn: ## Build project and install to you local maven repo
 	./mvnw clean install
 
-.PHONY: run-local
-run-local:
+.PHONY: run
+run:
 	java ${JAVA_OPTS} --enable-preview -Dmicronaut.config.files=application.yml -jar target/demo-0.1.jar
 
 .PHONY: help
