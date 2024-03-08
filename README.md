@@ -24,9 +24,10 @@ don't load. Opening the console I can observe that the javascript scripts
 fail to load with a 404 not found error for all urls mentioned previously.
 
 ## Issue
-It seems that the generated statics assets are missing the `mapping.path`
-in the script tag `src` paths which loads the javascript bundles in the `index.html` files.
-For example for redoc the generated html script tag is:
+It seems that the generated statics assets
+(i.e. `target/classes/META-INF/swagger/views/redoc/index.html`) are missing
+the `mapping.path` in the script tag `src` paths which loads the javascript
+bundles. For example for redoc the generated html script tag is:
 ```html
 <script src='/redoc/res/redoc.standalone.js'></script>
 ```
