@@ -3,12 +3,12 @@
 default: | help
 
 .PHONY: build-mvn
-build-mvn: ## Build project and install to you local maven repo
+build-mvn: ## Build project
 	./mvnw clean install
 
 .PHONY: run
 run:
-	java ${JAVA_OPTS} --enable-preview -Dmicronaut.config.files=application.yml -jar target/demo-0.1.jar
+	java ${JAVA_OPTS} -Dmicronaut.config.files=application.yml -jar target/demo-0.1.jar
 
 .PHONY: help
 help:
