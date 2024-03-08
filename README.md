@@ -1,24 +1,40 @@
-## Micronaut 4.3.4 Documentation
+# Bug repro in micronaut-openapi packages
 
-- [User Guide](https://docs.micronaut.io/4.3.4/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.3.4/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.3.4/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+The generated openapi docs don't respect the `mapping.path` attribute
+properly for swagger-ui, redoc, or rapidoc.
 
-- [Micronaut Maven Plugin documentation](https://micronaut-projects.github.io/micronaut-maven-plugin/latest/)
-## Feature micronaut-aot documentation
+Versions:
+- java: 21
+- micronaut: 4.3.4
+- micronaut-openapi: 6.6.3
 
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
+# Steps
+To run the application first build it using `make build-mvn` then run
+the program using `make run`. This starts the server on `localhost:10210`.
 
+## Expected behaviour
+When launching the application and navigating to
+`localhost:10210/api-docs/<rapidoc OR redoc OR swagger-ui>`
+the documentation loads as expected.
 
-## Feature maven-enforcer-plugin documentation
+## Observed behaviour
+When launching the application and navigating to
+`localhost:10210/api-docs/<rapidoc OR redoc OR swagger-ui>` the sites
+don't load. Opening the console I can observe that the javascript scripts
+fail to load with a 404 not found error for all urls mentioned previously.
 
-- [https://maven.apache.org/enforcer/maven-enforcer-plugin/](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
-
-
-## Feature serialization-jackson documentation
-
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
-
-
+## Issue
+It seems that the generated statics assets are missing the `mapping.path`
+in the script tag `src` paths which loads the javascript bundles in the `index.html` files.
+For example for redoc the generated html script tag is:
+```html
+<script src='/redoc/res/redoc.standalone.js'></script>
+```
+but it should be
+```html
+<script src='/api-docs/redoc/res/redoc.standalone.js'></script>
+```
+as this projects sets `mapping.path=api-docs` in the `openapi.properties` file.
+Manually changing this in the generated file and rerunning the application
+in IntelliJ fixes the issue (this won't work when run through maven as it
+uses a precompiled jar).
