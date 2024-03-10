@@ -18,7 +18,7 @@
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
         name = "micronaut bug repro env";
-        packages = with pkgs; [ make openjdk21 maven ];
+        packages = with pkgs; [ gnumake openjdk21 maven ];
       };
     });
 
